@@ -25,6 +25,7 @@ func (v value) MarshalJSON() ([]byte, error) {
 }
 
 type store interface {
+	Ping(ctx context.Context) error
 	Set(ctx context.Context, k string, v json.Marshaler) error
 	Get(ctx context.Context, k string, v json.Unmarshaler) (ok bool, err error)
 }
@@ -32,6 +33,10 @@ type store interface {
 func Do(s store) error {
 	ctx := context.Background()
 	v := value("This is an example string")
+
+	if err := s.Ping(ctx); err != nil {
+		return err
+	}
 
 	if err := s.Set(ctx, "the key", v); err != nil {
 		return err
