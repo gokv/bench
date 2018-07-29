@@ -1,0 +1,19 @@
+language: go
+
+services:
+  - redis-server
+
+addons:
+  postgresql: "9.5"
+
+go:
+  - '1.10.x'
+
+install:
+  - go get -t ./...
+
+before_script:
+  - psql -U postgres -c 'create database store;'
+
+script:
+  - go bench .
